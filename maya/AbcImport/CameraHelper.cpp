@@ -50,6 +50,7 @@
 void read(double iFrame, Alembic::AbcGeom::ICamera & iCamera,
     std::vector<double> & oArray)
 {
+    std::cout << "read camera" << std::endl;
     oArray.resize(18);
 
     // set some optional scale values
@@ -249,6 +250,7 @@ void read(double iFrame, Alembic::AbcGeom::ICamera & iCamera,
 
 MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
 {
+    std::cout << "createCamera " << std::endl;
     Alembic::AbcGeom::ICameraSchema schema = iNode.getSchema();
     MString name(iNode.getName().c_str());
 
@@ -259,6 +261,17 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
     // we need to read this to determine the film fit
     Alembic::AbcGeom::CameraSample samp;
     iNode.getSchema().get(samp);
+
+    /// --------------- ///
+    // counter scale to match unit system selected in maya since maya will take it as centimeters anyway
+    MDistance::Unit uiUnit = MDistance::uiUnit();
+    float scaleUnit = 1.0;
+
+    if(uiUnit == MDistance::kMillimeters)
+        scaleUnit = 0.1;
+    else if(uiUnit == MDistance::kMeters)
+        scaleUnit = 100.0;
+    /// --------------- ///
 
     std::size_t numOps = samp.getNumOps();
     if (numOps > 0)
@@ -291,10 +304,10 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
         // camera scale might be in the 3x3
 
         // weirdo attrs that are in inches
-        fnCamera.setHorizontalFilmAperture(samp.getHorizontalAperture()/2.54);
-        fnCamera.setVerticalFilmAperture(samp.getVerticalAperture()/2.54);
-        fnCamera.setHorizontalFilmOffset(samp.getHorizontalFilmOffset()/2.54);
-        fnCamera.setVerticalFilmOffset(samp.getVerticalFilmOffset()/2.54);
+        fnCamera.setHorizontalFilmAperture((samp.getHorizontalAperture() * scaleUnit) / 2.54);
+        fnCamera.setVerticalFilmAperture((samp.getVerticalAperture() * scaleUnit) / 2.54);
+        fnCamera.setHorizontalFilmOffset((samp.getHorizontalFilmOffset() * scaleUnit) / 2.54);
+        fnCamera.setVerticalFilmOffset((samp.getVerticalFilmOffset() * scaleUnit) / 2.54);
 
         // film fit offset might be in the 3x3
 
@@ -311,14 +324,14 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
             MGlobal::displayWarning(warn);
         }
 
-        fnCamera.setNearClippingPlane(samp.getNearClippingPlane());
-        fnCamera.setFarClippingPlane(samp.getFarClippingPlane());
+        fnCamera.setNearClippingPlane(samp.getNearClippingPlane() * scaleUnit);
+        fnCamera.setFarClippingPlane(samp.getFarClippingPlane() * scaleUnit);
 
         // prescale, film translate H, V, roll pivot H,V, film roll value
         // post scale might be in the 3x3
 
         fnCamera.setFStop(samp.getFStop());
-        fnCamera.setFocusDistance(samp.getFocusDistance());
+        fnCamera.setFocusDistance(samp.getFocusDistance() * scaleUnit);
 
         MTime sec(1.0, MTime::kSeconds);
         fnCamera.setShutterAngle(Alembic::AbcGeom::DegreesToRadians(

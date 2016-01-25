@@ -1,6 +1,6 @@
 //-*****************************************************************************
 //
-// Copyright (c) 2009-2011,
+// Copyright (c) 2009-2016,
 //  Sony Pictures Imageworks, Inc. and
 //  Industrial Light & Magic, a division of Lucasfilm Entertainment Company Ltd.
 //
@@ -34,35 +34,14 @@
 //
 //-*****************************************************************************
 
+#ifndef _Alembic_Maya_Export_h_
+#define _Alembic_Maya_Export_h_
 
-#ifndef ABCIMPORT_TRANSFORMHELPER_H_
-#define ABCIMPORT_TRANSFORMHELPER_H_
+#if defined _WIN32 || defined _WIN64
+    #define ALEMBIC_MAYA_PLUGIN_EXPORT __declspec(dllexport)
+#else
+    #define ALEMBIC_MAYA_PLUGIN_EXPORT __attribute__ ((visibility ("default")))
+#endif
 
-#include <maya/MObject.h>
-#include <maya/MDistance.h>
+#endif /* _Alembic_Maya_Export_h_ */
 
-#include <vector>
-#include <string>
-
-#include <Alembic/AbcGeom/IXform.h>
-#include "NodeIteratorVisitorHelper.h"
-
-MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
-    bool isConstant,
-    MObject & iObject,
-    std::vector<std::string> & oSampledTransOpNameList,
-    std::vector<Prop> & iSampledPropList,
-    std::size_t iFirstProp);
-
-void readComplex(double iFrame, Alembic::AbcGeom::IXform & iNode,
-    std::vector<double> & oSampleList);
-
-void read(double iFrame, Alembic::AbcGeom::IXform & iNode,
-    std::vector<double> & oSampleList, Alembic::AbcGeom::XformSample & oSamp);
-
-// used during creation of the scene
-// This function traverses the transform operation stack, and returns true if
-// the transform stack can't be directly mapped to Maya's transform stack
-bool isComplex(const Alembic::AbcGeom::XformSample & iSamp);
-
-#endif  // ABCIMPORT_TRANSFORMHELPER_H_
