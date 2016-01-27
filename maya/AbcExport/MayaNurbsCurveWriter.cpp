@@ -269,7 +269,9 @@ void MayaNurbsCurveWriter::write()
         {
             MPoint transformdPt;
 
-            cvArray[j] *= scaleUnit;
+            //
+            cvArray[j] = cvArray[j] * scaleUnit;
+            //
 
             if (mIsCurveGrp)
             {

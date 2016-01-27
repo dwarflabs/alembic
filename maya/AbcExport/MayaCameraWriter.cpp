@@ -122,10 +122,10 @@ void MayaCameraWriter::write()
 
     mSamp.setFocalLength(mfnCamera.focalLength());
     mSamp.setLensSqueezeRatio(mfnCamera.lensSqueezeRatio());
-    mSamp.setHorizontalAperture(mfnCamera.horizontalFilmAperture() * scaleUnit * 2.54);
-    mSamp.setVerticalAperture(mfnCamera.verticalFilmAperture() * scaleUnit * 2.54);
-    mSamp.setHorizontalFilmOffset(mfnCamera.horizontalFilmOffset() * scaleUnit * 2.54);
-    mSamp.setVerticalFilmOffset(mfnCamera.verticalFilmOffset() * scaleUnit * 2.54);
+    mSamp.setHorizontalAperture(mfnCamera.horizontalFilmAperture() * 2.54);
+    mSamp.setVerticalAperture(mfnCamera.verticalFilmAperture() * 2.54);
+    mSamp.setHorizontalFilmOffset(mfnCamera.horizontalFilmOffset() * 2.54);
+    mSamp.setVerticalFilmOffset(mfnCamera.verticalFilmOffset() * 2.54);
     double overscan = mfnCamera.overscan() - 1.0;
     mSamp.setOverScanLeft(overscan);
     mSamp.setOverScanRight(overscan);

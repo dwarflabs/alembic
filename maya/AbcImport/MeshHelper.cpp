@@ -236,7 +236,6 @@ namespace
             {
                 oPointArray.set(i,
                     (*iPoints)[i].x * scaleUnit, (*iPoints)[i].y * scaleUnit, (*iPoints)[i].z * scaleUnit);
-                //std::cout << "import mesh points[" << i << "] " << (*iPoints)[i].x << " " << (*iPoints)[i].y << " " << (*iPoints)[i].z << "  scaleUnit " << scaleUnit << std::endl;
 
                 //oPointArray.set(i,
                 //    (*iPoints)[i].x, (*iPoints)[i].y, (*iPoints)[i].z);
@@ -256,11 +255,11 @@ namespace
 
                 oPointArray.set(i,
                     simpleLerp<float>(alpha,
-                        (*iPoints)[i].x * scaleUnit, (*iCeilPoints)[i].x * scaleUnit),
+                        (*iPoints)[i].x, (*iCeilPoints)[i].x) * scaleUnit,
                     simpleLerp<float>(alpha,
-                        (*iPoints)[i].y * scaleUnit, (*iCeilPoints)[i].y * scaleUnit),
+                        (*iPoints)[i].y, (*iCeilPoints)[i].y) * scaleUnit,
                     simpleLerp<float>(alpha,
-                        (*iPoints)[i].z * scaleUnit, (*iCeilPoints)[i].z * scaleUnit));
+                        (*iPoints)[i].z, (*iCeilPoints)[i].z) * scaleUnit);
             }
         }
 

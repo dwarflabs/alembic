@@ -50,7 +50,6 @@
 void read(double iFrame, Alembic::AbcGeom::ICamera & iCamera,
     std::vector<double> & oArray)
 {
-    std::cout << "read camera" << std::endl;
     oArray.resize(18);
 
     // set some optional scale values
@@ -250,7 +249,6 @@ void read(double iFrame, Alembic::AbcGeom::ICamera & iCamera,
 
 MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
 {
-    std::cout << "createCamera " << std::endl;
     Alembic::AbcGeom::ICameraSchema schema = iNode.getSchema();
     MString name(iNode.getName().c_str());
 
@@ -304,10 +302,11 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
         // camera scale might be in the 3x3
 
         // weirdo attrs that are in inches
-        fnCamera.setHorizontalFilmAperture((samp.getHorizontalAperture() * scaleUnit) / 2.54);
-        fnCamera.setVerticalFilmAperture((samp.getVerticalAperture() * scaleUnit) / 2.54);
-        fnCamera.setHorizontalFilmOffset((samp.getHorizontalFilmOffset() * scaleUnit) / 2.54);
-        fnCamera.setVerticalFilmOffset((samp.getVerticalFilmOffset() * scaleUnit) / 2.54);
+        /// need scale here ?
+        fnCamera.setHorizontalFilmAperture(samp.getHorizontalAperture() / 2.54);
+        fnCamera.setVerticalFilmAperture(samp.getVerticalAperture() / 2.54);
+        fnCamera.setHorizontalFilmOffset(samp.getHorizontalFilmOffset() / 2.54);
+        fnCamera.setVerticalFilmOffset(samp.getVerticalFilmOffset() / 2.54);
 
         // film fit offset might be in the 3x3
 
@@ -324,6 +323,8 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
             MGlobal::displayWarning(warn);
         }
 
+        //fnCamera.setNearClippingPlane(samp.getNearClippingPlane());
+        //fnCamera.setFarClippingPlane(samp.getFarClippingPlane());
         fnCamera.setNearClippingPlane(samp.getNearClippingPlane() * scaleUnit);
         fnCamera.setFarClippingPlane(samp.getFarClippingPlane() * scaleUnit);
 
@@ -331,6 +332,7 @@ MObject create(Alembic::AbcGeom::ICamera & iNode, MObject & iParent)
         // post scale might be in the 3x3
 
         fnCamera.setFStop(samp.getFStop());
+        //fnCamera.setFocusDistance(samp.getFocusDistance());
         fnCamera.setFocusDistance(samp.getFocusDistance() * scaleUnit);
 
         MTime sec(1.0, MTime::kSeconds);

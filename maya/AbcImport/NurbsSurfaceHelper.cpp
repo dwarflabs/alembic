@@ -315,7 +315,7 @@ MObject readNurbs(double iFrame, Alembic::AbcGeom::INuPatch & iNode,
             unsigned int mayaIndex = u * numCVInV + (numCVInV - v - 1);
             MPoint pt((*pos)[curPos].x, (*pos)[curPos].y, (*pos)[curPos].z);
 
-            pt *= scaleUnit;
+            pt = pt * scaleUnit;
 
             if (weights)
             {

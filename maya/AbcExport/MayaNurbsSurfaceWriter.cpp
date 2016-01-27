@@ -206,7 +206,6 @@ void MayaNurbsSurfaceWriter::write()
             Alembic::Abc::V3f p(static_cast<float>(cvArray[index].x),
                                 static_cast<float>(cvArray[index].y),
                                 static_cast<float>(cvArray[index].z));
-            //std::cout << "export nurbs surf points[" << v << "][" << u << "] " << p * scaleUnit << std::endl;
 
             sampPos.push_back(p * scaleUnit);
             //sampPos.push_back(p);

@@ -98,27 +98,12 @@ void readComplex(double iFrame, Alembic::AbcGeom::IXform & iNode,
     // when we pass in the matrix for some reason
     MSpace::Space tSpace = MSpace::kTransform;
 
-    /// --------------- ///
-    // counter scale to match unit system selected in maya since maya will take it as centimeters anyway
-    MDistance::Unit uiUnit = MDistance::uiUnit();
-    float scaleUnit = 1.0;
-
-    if(uiUnit == MDistance::kMillimeters)
-        scaleUnit = 0.1;
-    else if(uiUnit == MDistance::kMeters)
-        scaleUnit = 100.0;
-    /// --------------- ///
-
     // push the results into sampleList
     MVector vec = mmat.getTranslation(tSpace);
-
-    vec *= scaleUnit;
-
     oSampleList.push_back(vec.x);
     oSampleList.push_back(vec.y);
     oSampleList.push_back(vec.z);
 
-    /// need scale here ? vec
     vec = mmat.rotatePivotTranslation(tSpace);
     oSampleList.push_back(vec.x);
     oSampleList.push_back(vec.y);
@@ -142,7 +127,6 @@ void readComplex(double iFrame, Alembic::AbcGeom::IXform & iNode,
     oSampleList.push_back(Alembic::AbcGeom::RadiansToDegrees(vec.y));
     oSampleList.push_back(Alembic::AbcGeom::RadiansToDegrees(vec.z));
 
-    /// need scale here ? pt
     pt = mmat.scalePivotTranslation(tSpace);
     /// should not pt be used instead of vec ?
     oSampleList.push_back(vec.x);
@@ -855,25 +839,23 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
                         {
                             oSampledTransOpNameList.push_back("translateX");
                         }
-                        //vec.x = op.getChannelValue(0);
-                        vec.x = op.getChannelValue(0) * scaleUnit;
+                        vec.x = op.getChannelValue(0);
 
 
                         if (op.isYAnimated())
                         {
                             oSampledTransOpNameList.push_back("translateY");
                         }
-                        //vec.y = op.getChannelValue(1);
-                        vec.y = op.getChannelValue(1) * scaleUnit;
+                        vec.y = op.getChannelValue(1);
 
                         if (op.isZAnimated())
                         {
                             oSampledTransOpNameList.push_back("translateZ");
                         }
-                        //vec.z = op.getChannelValue(2);
-                        vec.z = op.getChannelValue(2) * scaleUnit;
+                        vec.z = op.getChannelValue(2);
 
-                        trans.setTranslation(vec, gSpace);
+                        //trans.setTranslation(vec, gSpace);
+                        trans.setTranslation(vec * scaleUnit, gSpace);
                     }
                     break;
 

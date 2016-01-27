@@ -140,8 +140,8 @@ void MayaPointPrimitiveWriter::write(double iFrame)
     particle.velocity(vecArray);
     for (unsigned int i = 0; i < size; i++)
     {
-        /// scale velocity ?
-        MVector vec = vecArray[i];
+        //MVector vec = vecArray[i];
+        MVector vec = vecArray[i] * scaleUnit;
         velocity.push_back(static_cast<float>(vec.x));
         velocity.push_back(static_cast<float>(vec.y));
         velocity.push_back(static_cast<float>(vec.z));
