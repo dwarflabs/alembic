@@ -102,15 +102,13 @@ void readComplex(double iFrame, Alembic::AbcGeom::IXform & iNode,
     MSpace::Space tSpace = MSpace::kTransform;
 
     // push the results into sampleList
-    MVector vec = mmat.getTranslation(tSpace);
-
-    vec *= scaleUnit;
+    MVector vec = mmat.getTranslation(tSpace) * scaleUnit;
 
     oSampleList.push_back(vec.x);
     oSampleList.push_back(vec.y);
     oSampleList.push_back(vec.z);
 
-    vec = mmat.rotatePivotTranslation(tSpace);
+    vec = mmat.rotatePivotTranslation(tSpace) * scaleUnit;
     oSampleList.push_back(vec.x);
     oSampleList.push_back(vec.y);
     oSampleList.push_back(vec.z);
@@ -133,16 +131,15 @@ void readComplex(double iFrame, Alembic::AbcGeom::IXform & iNode,
     oSampleList.push_back(Alembic::AbcGeom::RadiansToDegrees(vec.y));
     oSampleList.push_back(Alembic::AbcGeom::RadiansToDegrees(vec.z));
 
-    pt = mmat.scalePivotTranslation(tSpace);
-    /// should not pt be used instead of vec ?
+    vec = mmat.scalePivotTranslation(tSpace) * scaleUnit;
     oSampleList.push_back(vec.x);
     oSampleList.push_back(vec.y);
     oSampleList.push_back(vec.z);
 
-    vec = mmat.scalePivot(tSpace);
-    oSampleList.push_back(vec.x);
-    oSampleList.push_back(vec.y);
-    oSampleList.push_back(vec.z);
+    pt = mmat.scalePivot(tSpace);
+    oSampleList.push_back(pt.x);
+    oSampleList.push_back(pt.y);
+    oSampleList.push_back(pt.z);
 
     double shear[3];
     mmat.getShear(shear, tSpace);
@@ -587,9 +584,8 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
 
         trans.setTranslation(mmat.getTranslation(tSpace) * scaleUnit, tSpace);
 
-        /// need scale here ?
         trans.setRotatePivotTranslation(
-            mmat.rotatePivotTranslation(tSpace), tSpace);
+            mmat.rotatePivotTranslation(tSpace) * scaleUnit, tSpace);
 
         trans.setRotatePivot(
             mmat.rotatePivot(tSpace), tSpace, gBalance);
@@ -599,9 +595,8 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
         trans.setRotateOrientation(
             mmat.rotationOrientation(), tSpace, gBalance);
 
-        /// need scale here ?
         trans.setScalePivotTranslation(
-            mmat.scalePivotTranslation(tSpace), tSpace);
+            mmat.scalePivotTranslation(tSpace) * scaleUnit, tSpace);
 
         trans.setScalePivot(
             mmat.scalePivot(tSpace), tSpace, gBalance);
@@ -938,7 +933,6 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
                     {
                         MVector vec;
 
-                        /// need scale here ?
                         if (op.isXAnimated())
                         {
                             oSampledTransOpNameList.push_back(
@@ -961,7 +955,7 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
                         }
                         vec.z = op.getChannelValue(2);
 
-                        trans.setScalePivotTranslation(vec, gSpace);
+                        trans.setScalePivotTranslation(vec * scaleUnit, gSpace);
                     }
                     break;
 
@@ -1030,7 +1024,6 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
                     {
                         MVector vec;
 
-                        /// need scale here ?
                         if (op.isXAnimated())
                         {
                             oSampledTransOpNameList.push_back(
@@ -1052,7 +1045,7 @@ MStatus connectToXform(const Alembic::AbcGeom::XformSample & iSamp,
                         }
                         vec.z = op.getChannelValue(2);
 
-                        trans.setRotatePivotTranslation(vec, gSpace);
+                        trans.setRotatePivotTranslation(vec * scaleUnit, gSpace);
                     }
                     break;
 

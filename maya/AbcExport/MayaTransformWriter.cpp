@@ -83,8 +83,7 @@ void addTranslate(const MFnDependencyNode & iTrans,
     // counter scale to match unit system selected in maya since maya will take it as centimeters anyway
     float scaleUnit = 1.0;
 
-    /// need also for rotatePivotTranslate and scalePivotTranslate ?
-    if(parentName == "translate")
+    if(parentName == "translate" || parentName == "rotatePivotTranslate" || parentName == "scalePivotTranslate")
     {
         scaleUnit = util::getScaleUnitExport();
 
