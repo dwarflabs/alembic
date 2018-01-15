@@ -29,3 +29,10 @@ MAYA_LIB_DIR=$MAYA_DIR/lib
 
 ../build_version.sh $MAYA_PREFIX $MAYA_DIR $MAYA_INC_DIR $MAYA_LIB_DIR
 
+####	MAYA 2017    ####
+MAYA_PREFIX=$PREFIX/maya2017
+MAYA_DIR=/servers/Software/Autodesk/Maya/2017
+MAYA_INC_DIR=$MAYA_DIR/include
+MAYA_LIB_DIR=$MAYA_DIR/lib
+
+../build_version.sh $MAYA_PREFIX $MAYA_DIR $MAYA_INC_DIR $MAYA_LIB_DIR
