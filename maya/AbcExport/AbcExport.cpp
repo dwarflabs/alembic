@@ -47,7 +47,21 @@ namespace AbcA = Alembic::AbcCoreAbstract;
 
 AbcExport::AbcExport()
 {
-    std::cout << "Using custom alembic exporter" << std::endl;
+    char const* env = std::getenv("ALEMBIC_EXPORT_UNIT");
+    bool useEnvVar = env != NULL;
+    MString s = "Using ustom alembic exporter\n";
+    if(useEnvVar)
+    {
+        s += "ALEMBIC_EXPORT_UNIT setted, using ";
+        s += env;
+    }
+    else
+        s += "ALEMBIC_EXPORT_UNIT not setted, using Maya working unit";
+
+    // print in script editor
+    MGlobal::displayInfo(s);
+    // print in terminal
+    std::cout << s << std::endl;
 }
 
 AbcExport::~AbcExport()

@@ -111,7 +111,21 @@ AbcImport -ct \"root1 root2 root3 ...\" \"/mcp/test.abc\";                  \n"
 
 AbcImport::AbcImport()
 {
-    std::cout << "Using custom alembic importer" << std::endl;
+    char const* env = std::getenv("ALEMBIC_IMPORT_UNIT");
+    bool useEnvVar = env != NULL;
+    MString s = "Using ustom alembic importer\n";
+    if(useEnvVar)
+    {
+        s += "ALEMBIC_IMPORT_UNIT setted, using ";
+        s += env;
+    }
+    else
+        s += "ALEMBIC_IMPORT_UNIT not setted, using Maya working unit";
+
+    // print in script editor
+    MGlobal::displayInfo(s);
+    // print in terminal
+    std::cout << s << std::endl;
 }
 
 AbcImport::~AbcImport()
